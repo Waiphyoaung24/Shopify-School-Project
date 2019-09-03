@@ -22,11 +22,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.adapters.ProductListAdapter;
 import xyz.waiphyoag.shopify.data.model.ProductModel;
+import xyz.waiphyoag.shopify.data.vo.ShopNowVO;
 import xyz.waiphyoag.shopify.delegates.ProductListScreenDelegate;
 import xyz.waiphyoag.shopify.events.LoadShopNowListEvent;
 
@@ -45,6 +49,8 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
 
     @BindView(R.id.iv_shopping_cart)
     ImageView ivAddToCart;
+    List<ShopNowVO> shopNowVOList = new ArrayList<>();
+
 
     private ProductListAdapter mAdapter;
 
@@ -60,20 +66,19 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         ButterKnife.bind(this, this);
 
 
-        mAdapter = new ProductListAdapter(this,this);
-        GridLayoutManager gridLayoutManagerForProductList = new GridLayoutManager(getApplicationContext(),2);
+        mAdapter = new ProductListAdapter(this, this);
+        GridLayoutManager gridLayoutManagerForProductList = new GridLayoutManager(getApplicationContext(), 2);
         rvProductList.setAdapter(mAdapter);
         rvProductList.setLayoutManager(gridLayoutManagerForProductList);
 
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
-        {
-            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                     | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY );
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -116,7 +121,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
             }
         });
 
-
+        ProductModel.getInstance().startLoadingShopNowProduct();
 
 
     }
@@ -124,25 +129,36 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
-        ProductModel.getInstance().startLoadingShopNowProduct();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
 
     }
+
 
     @Override
     public void onStop() {
         super.onStop();
 
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
 
 
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDataLoadedShopNow(LoadShopNowListEvent event){
-        mAdapter.setNewData(event.getShopNowVOList());
+    public void onDataLoadedShopNow(LoadShopNowListEvent event) {
+
+
+        if (!event.getShopNowVOList().isEmpty()) {
+
+            mAdapter.setNewData(event.getShopNowVOList());
+        }
+
+
     }
 
 

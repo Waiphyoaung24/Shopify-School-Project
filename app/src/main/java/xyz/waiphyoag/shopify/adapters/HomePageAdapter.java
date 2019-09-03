@@ -7,7 +7,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import xyz.waiphyoag.shopify.R;
+import xyz.waiphyoag.shopify.data.vo.DesignerVO;
+import xyz.waiphyoag.shopify.data.vo.RandomThingsVO;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
+import xyz.waiphyoag.shopify.data.vo.SharedParent;
+import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
 import xyz.waiphyoag.shopify.viewholders.BaseViewHolder;
 import xyz.waiphyoag.shopify.viewholders.ItemInDesginerViewHolder;
@@ -18,7 +22,7 @@ import xyz.waiphyoag.shopify.viewholders.ItemInTopTrendsViewHolder;
  * Created by WaiPhyoAg on 8/31/19.
  */
 
-public class HomePageAdapter extends BaseRecyclerAdapter<BaseViewHolder,SampleVo> {
+public class HomePageAdapter extends BaseRecyclerAdapter<BaseViewHolder, SharedParent> {
 
     private static final int VT_DESIGNER = 0;
     private static final int VT_TOPTRENDS = 1;
@@ -26,7 +30,7 @@ public class HomePageAdapter extends BaseRecyclerAdapter<BaseViewHolder,SampleVo
 
     private ProductMainScreenDelegate mDelegate;
 
-    public HomePageAdapter(Context context,ProductMainScreenDelegate productMainScreenDelegate) {
+    public HomePageAdapter(Context context, ProductMainScreenDelegate productMainScreenDelegate) {
         super(context);
         mDelegate = productMainScreenDelegate;
 
@@ -41,15 +45,15 @@ public class HomePageAdapter extends BaseRecyclerAdapter<BaseViewHolder,SampleVo
         switch (viewType) {
             case VT_DESIGNER:
                 viewHolder = new ItemInDesginerViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.layout_first_content, parent, false),mDelegate);
+                        .inflate(R.layout.layout_first_content, parent, false), mDelegate);
                 break;
             case VT_TOPTRENDS:
                 viewHolder = new ItemInTopTrendsViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.layout_second_content, parent, false),mDelegate);
+                        .inflate(R.layout.layout_second_content, parent, false), mDelegate);
                 break;
             case VT_RANDOMTHINGS:
                 viewHolder = new ItemInRandomViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.layout_random_things, parent, false),mDelegate);
+                        .inflate(R.layout.layout_random_things, parent, false), mDelegate);
                 break;
 
 
@@ -58,32 +62,25 @@ public class HomePageAdapter extends BaseRecyclerAdapter<BaseViewHolder,SampleVo
 
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
 
-    }
 
     @Override
     public int getItemViewType(int position) {
-        int i = 0;
-        switch (position) {
-            case 0:
-                i = VT_DESIGNER;
-                break;
-            case 1:
-                i = VT_TOPTRENDS;
-                break;
-            case 2:
-                i = VT_RANDOMTHINGS;
-                break;
-        }
+        if (mData.get(position) instanceof DesignerVO) {
+            return VT_DESIGNER;
+        } else if (mData.get(position) instanceof TopTrendsVO) {
+            return VT_TOPTRENDS;
+        } else if (mData.get(position) instanceof RandomThingsVO) {
+            return VT_RANDOMTHINGS;
 
-        return i;
+
+        }
+        return position;
     }
 
 
     @Override
     public int getItemCount() {
-        return 3;
+        return mData.size();
     }
 }

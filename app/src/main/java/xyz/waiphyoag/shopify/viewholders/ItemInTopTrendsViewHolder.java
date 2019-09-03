@@ -9,13 +9,14 @@ import butterknife.ButterKnife;
 import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.adapters.ProductInTopTrendsAdapter;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
+import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
 
 /**
  * Created by WaiPhyoAg on 8/30/19.
  */
 
-public class ItemInTopTrendsViewHolder extends BaseViewHolder<SampleVo>{
+public class ItemInTopTrendsViewHolder extends BaseViewHolder<TopTrendsVO>{
     @BindView(R.id.rv_TopTrends)
     RecyclerView rvTopTrendsItem;
     private ProductInTopTrendsAdapter mTopTrendsAdapter;
@@ -33,14 +34,15 @@ public class ItemInTopTrendsViewHolder extends BaseViewHolder<SampleVo>{
         rvTopTrendsItem.setLayoutManager(linearLayoutManagerForTopTrends);
     }
 
-    @Override
-    public void setData(SampleVo data) {
-
-    }
 
     @Override
     public void onClick(View v) {
         mDelegate.onTapItem();
+
+    }
+
+    @Override
+    public void setData(TopTrendsVO data) {
 
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import xyz.waiphyoag.shopify.R;
 
+import xyz.waiphyoag.shopify.data.vo.DesignerVO;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
 import xyz.waiphyoag.shopify.viewholders.BaseViewHolder;
@@ -19,7 +20,7 @@ import xyz.waiphyoag.shopify.viewholders.SampleForDesignerViewHolder;
  * Created by WaiPhyoAg on 8/30/19.
  */
 
-public class ProductInDesignerAdapter extends BaseRecyclerAdapter<SampleForDesignerViewHolder,SampleVo> {
+public class ProductInDesignerAdapter extends BaseRecyclerAdapter<SampleForDesignerViewHolder,DesignerVO> {
 
 
     private ProductMainScreenDelegate mDelegate;
@@ -38,10 +39,7 @@ public class ProductInDesignerAdapter extends BaseRecyclerAdapter<SampleForDesig
         return  sampleViewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull SampleForDesignerViewHolder holder, int position) {
 
-    }
 
 
 
@@ -49,6 +47,6 @@ public class ProductInDesignerAdapter extends BaseRecyclerAdapter<SampleForDesig
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mData.size();
     }
 }

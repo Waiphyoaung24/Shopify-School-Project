@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
+import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
 import xyz.waiphyoag.shopify.viewholders.ItemInDesginerViewHolder;
 import xyz.waiphyoag.shopify.viewholders.ItemInTopTrendsViewHolder;
@@ -18,7 +19,7 @@ import xyz.waiphyoag.shopify.viewholders.SampleForTopTrendsViewHolder;
  * Created by WaiPhyoAg on 8/30/19.
  */
 
-public class ProductInTopTrendsAdapter extends BaseRecyclerAdapter<SampleForTopTrendsViewHolder,SampleVo> {
+public class ProductInTopTrendsAdapter extends BaseRecyclerAdapter<SampleForTopTrendsViewHolder,TopTrendsVO> {
 
     private ProductMainScreenDelegate mDelegate;
 
@@ -37,15 +38,12 @@ public class ProductInTopTrendsAdapter extends BaseRecyclerAdapter<SampleForTopT
         return  sampleForTopTrendsViewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull SampleForTopTrendsViewHolder holder, int position) {
 
-    }
 
 
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mData.size();
     }
 }

@@ -39,17 +39,20 @@ public class ProductModel {
 
 
     public ArrayList<DesignerVO> designerVOS = new ArrayList<>();
+    public List<DesignerVO> designerVOList = new ArrayList<>();
+
     public ArrayList<TopTrendsVO> topTrendsVo = new ArrayList<>();
+    public List<TopTrendsVO> topTrendsVOList = new ArrayList<>();
+
+    public List<RandomThingsVO> randomThingsVOList = new ArrayList<>();
     public ArrayList<RandomThingsVO> randomThingsVOS = new ArrayList<>();
+
     public ArrayList<ShopNowVO> shopNowVOS = new ArrayList<>();
     public ArrayList<PromotionVO> promotionVOS = new ArrayList<>();
 
 
     public List<ShopNowVO> shopNowVOList = new ArrayList<>();
 
-    public List<ShopNowVO> getShopNowVOList() {
-        return shopNowVOList;
-    }
 
     public List<SharedParent> mCollectionList;
 
@@ -68,6 +71,7 @@ public class ProductModel {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
 
         mCollectionList = new ArrayList<>();
 
@@ -91,12 +95,20 @@ public class ProductModel {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                designerVOS.clear();
+
                 if (dataSnapshot != null) {
                     for (DataSnapshot products : dataSnapshot.getChildren()) {
                         DesignerVO designerVO = products.getValue(DesignerVO.class);
+
                         designerVOS.add(designerVO);
                     }
-                    mCollectionList.addAll(designerVOS);
+
+                    designerVOList.clear();
+                    designerVOList.addAll(designerVOS);
+                    LoadProductListEvent.LoadDesignerProduct loadDesignerProduct = new LoadProductListEvent.LoadDesignerProduct(designerVOList);
+                    EventBus.getDefault().post(loadDesignerProduct);
+
 
                 }
             }
@@ -115,14 +127,20 @@ public class ProductModel {
         shopifyNodeDBR.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                topTrendsVo.clear();
                 if (dataSnapshot != null) {
                     for (DataSnapshot products : dataSnapshot.getChildren()) {
                         TopTrendsVO topTrendsVO = products.getValue(TopTrendsVO.class);
+
                         topTrendsVo.add(topTrendsVO);
                     }
 
-                    mCollectionList.addAll(topTrendsVo);
+                    topTrendsVOList.clear();
+                    topTrendsVOList.addAll(topTrendsVo);
+
+                    LoadProductListEvent.loadTopTrendsProduct loadTopTrendsProduct = new LoadProductListEvent.loadTopTrendsProduct(topTrendsVOList);
+                    EventBus.getDefault().post(loadTopTrendsProduct);
+
 
                 }
             }
@@ -141,13 +159,17 @@ public class ProductModel {
         shopifyNodeDBR.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                shopNowVOS.clear();
 
                 if (dataSnapshot != null) {
                     for (DataSnapshot products : dataSnapshot.getChildren()) {
                         ShopNowVO shopNowVO = products.getValue(ShopNowVO.class);
                         shopNowVOS.add(shopNowVO);
+
                     }
+                    shopNowVOList.clear();
                     shopNowVOList.addAll(shopNowVOS);
+
                     LoadShopNowListEvent loadShopNowListEvent = new LoadShopNowListEvent(shopNowVOList);
                     EventBus.getDefault().post(loadShopNowListEvent);
 
@@ -163,8 +185,6 @@ public class ProductModel {
     }
 
 
-
-
     public void startLoadingRandomThingsProduct() {
         DatabaseReference shopifyNodeDBR = mDatabaseReference.child(SHOPIFY).child("RandomThings");
 
@@ -172,13 +192,18 @@ public class ProductModel {
         shopifyNodeDBR.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                randomThingsVOS.clear();
 
                 if (dataSnapshot != null) {
                     for (DataSnapshot products : dataSnapshot.getChildren()) {
                         RandomThingsVO randomThingsVO = products.getValue(RandomThingsVO.class);
                         randomThingsVOS.add(randomThingsVO);
                     }
-                    mCollectionList.addAll(randomThingsVOS);
+                    randomThingsVOList.clear();
+                    randomThingsVOList.addAll(randomThingsVOS);
+
+                    LoadProductListEvent.loadRandomThingsProduct randomThingsProduct = new LoadProductListEvent.loadRandomThingsProduct(randomThingsVOList);
+                    EventBus.getDefault().post(randomThingsProduct);
 
                 }
             }
@@ -197,6 +222,7 @@ public class ProductModel {
         shopifyNodeDBR.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                promotionVOS.clear();
 
                 if (dataSnapshot != null) {
                     for (DataSnapshot products : dataSnapshot.getChildren()) {
@@ -213,6 +239,8 @@ public class ProductModel {
             }
         });
     }
+
+
 
 
 }

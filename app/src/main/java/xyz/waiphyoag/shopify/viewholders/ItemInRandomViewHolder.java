@@ -8,6 +8,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.adapters.RandomItemsAdapter;
+import xyz.waiphyoag.shopify.data.vo.RandomThingsVO;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
 
@@ -15,7 +16,7 @@ import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
  * Created by WaiPhyoAg on 8/31/19.
  */
 
-public class ItemInRandomViewHolder extends BaseViewHolder<SampleVo> {
+public class ItemInRandomViewHolder extends BaseViewHolder<RandomThingsVO> {
 
     @BindView(R.id.rv_RandomThings)
     RecyclerView rvRandomItems;
@@ -35,14 +36,17 @@ public class ItemInRandomViewHolder extends BaseViewHolder<SampleVo> {
         rvRandomItems.setAdapter(mRandomItemAdapter);
     }
 
-    @Override
-    public void setData(SampleVo data) {
 
-    }
 
     @Override
     public void onClick(View v) {
         mDelegate.onTapRandom();
+
+    }
+
+    @Override
+    public void setData(RandomThingsVO data) {
+
 
     }
 }

@@ -26,7 +26,7 @@ public class LoadProductListEvent {
     }
 
     public static class LoadDesignerProduct {
-        private List<DesignerVO>loadDeisngerProduct;
+        private List<DesignerVO> loadDeisngerProduct;
 
         public LoadDesignerProduct(List<DesignerVO> loadDeisngerProduct) {
             this.loadDeisngerProduct = loadDeisngerProduct;
@@ -49,6 +49,7 @@ public class LoadProductListEvent {
             return loadTopTrendsList;
         }
     }
+
     public static class loadRandomThingsProduct {
 
         private List<RandomThingsVO> loadRandomThingsList;

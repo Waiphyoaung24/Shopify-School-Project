@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import xyz.waiphyoag.shopify.R;
+import xyz.waiphyoag.shopify.data.vo.RandomThingsVO;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
 import xyz.waiphyoag.shopify.viewholders.ItemInRandomViewHolder;
@@ -17,7 +18,7 @@ import xyz.waiphyoag.shopify.viewholders.SampleForRandomThingsViewHolder;
  * Created by WaiPhyoAg on 8/31/19.
  */
 
-public class RandomItemsAdapter extends BaseRecyclerAdapter<SampleForRandomThingsViewHolder,SampleVo> {
+public class RandomItemsAdapter extends BaseRecyclerAdapter<SampleForRandomThingsViewHolder,RandomThingsVO> {
 
     private ProductMainScreenDelegate mDelegate;
     public RandomItemsAdapter(Context context, ProductMainScreenDelegate productMainScreenDelegate) {
@@ -35,15 +36,12 @@ public class RandomItemsAdapter extends BaseRecyclerAdapter<SampleForRandomThing
         return sampleForRandomThingsViewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull SampleForRandomThingsViewHolder holder, int position) {
 
-    }
 
 
 
     @Override
     public int getItemCount() {
-        return 3;
+        return mData.size();
     }
 }

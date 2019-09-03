@@ -2,9 +2,12 @@ package xyz.waiphyoag.shopify.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import xyz.waiphyoag.shopify.R;
@@ -20,6 +23,10 @@ public class ItemInProductListViewHolder extends BaseViewHolder<ShopNowVO> {
 
     @BindView(R.id.tv_proudct_name)
     TextView tvProductName;
+    @BindView(R.id.iv_product_image)
+    ImageView ivProductImage;
+    @BindView(R.id.tv_product_price)
+    TextView tvProductPrice;
 
     private ProductListScreenDelegate mDelegate;
 
@@ -41,6 +48,11 @@ public class ItemInProductListViewHolder extends BaseViewHolder<ShopNowVO> {
     public void setData(ShopNowVO data) {
 
         tvProductName.setText(data.getProductTitle());
+
+        Glide.with(itemView.getContext())
+                .load(data.getProductImage())
+                .into(ivProductImage);
+        tvProductPrice.setText(data.getProductPrice());
 
 
     }

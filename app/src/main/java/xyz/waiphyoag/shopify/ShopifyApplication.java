@@ -17,11 +17,7 @@ public class ShopifyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        ProductModel.getInstance().startLoadingDesignerProduct();
-        ProductModel.getInstance().startLoadingTopTrendsProduct();
-        ProductModel.getInstance().startLoadingShopNowProduct();
-        ProductModel.getInstance().startLoadingRandomThingsProduct();
-        ProductModel.getInstance().startLoadingPromotionProduct();
+
 
 
     }
