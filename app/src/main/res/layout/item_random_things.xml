@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    android:elevation="4dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="@android:drawable/screen_background_dark_transparent"
+            android:src="@drawable/img_random_things"
+            android:scaleType="centerCrop"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Designer Collection"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tv_random_name"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white_full"
+            android:textSize="@dimen/text_heading_2x"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textColor="@color/primary"
+            android:layout_below="@id/tv_random_name"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_heading_1x"
+            android:text="Up to 70% off"/>
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
