@@ -11,7 +11,6 @@ import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.data.vo.RandomThingsVO;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
-import xyz.waiphyoag.shopify.viewholders.ItemInRandomViewHolder;
 import xyz.waiphyoag.shopify.viewholders.SampleForRandomThingsViewHolder;
 
 /**

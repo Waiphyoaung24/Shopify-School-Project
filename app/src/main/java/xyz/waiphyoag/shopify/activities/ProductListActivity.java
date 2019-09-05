@@ -100,7 +100,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
 
                     case R.id.item_cart:
 
-                        Intent intentForCart = AddToCartActivity.cartIntent(getApplicationContext());
+                        Intent intentForCart = AddToCartActivity.cartIntentForNoItem(getApplicationContext());
                         startActivity(intentForCart);
 
                         break;
@@ -116,7 +116,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         ivAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = AddToCartActivity.cartIntent(getApplicationContext());
+                Intent intent = AddToCartActivity.cartIntentForNoItem(getApplicationContext());
                 startActivity(intent);
             }
         });
@@ -163,9 +163,9 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
 
 
     @Override
-    public void onTapProductListImage() {
+    public void onTapProductListImage(String productId) {
 
-        Intent intentForDetail = ProductDetailActivity.detailIntent(getApplicationContext());
+        Intent intentForDetail = ProductDetailActivity.detailIntentForList(getApplicationContext(), productId);
         startActivity(intentForDetail);
 
     }

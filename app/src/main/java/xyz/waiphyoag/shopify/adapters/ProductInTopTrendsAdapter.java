@@ -11,8 +11,7 @@ import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.data.vo.SampleVo;
 import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
 import xyz.waiphyoag.shopify.delegates.ProductMainScreenDelegate;
-import xyz.waiphyoag.shopify.viewholders.ItemInDesginerViewHolder;
-import xyz.waiphyoag.shopify.viewholders.ItemInTopTrendsViewHolder;
+
 import xyz.waiphyoag.shopify.viewholders.SampleForTopTrendsViewHolder;
 
 /**

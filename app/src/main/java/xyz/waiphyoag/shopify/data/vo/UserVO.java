@@ -13,6 +13,23 @@ public class UserVO {
     private String userName;
     @SerializedName("productId")
     private String productId;
+    @SerializedName("email")
+    private String email;
+
+    public UserVO(String userId, String userName, String productId, String email) {
+        this.userId = userId;
+        this.userName = userName;
+        this.productId = productId;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUserId() {
         return userId;

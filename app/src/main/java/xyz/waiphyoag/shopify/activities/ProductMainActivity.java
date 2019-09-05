@@ -36,11 +36,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.waiphyoag.shopify.R;
-import xyz.waiphyoag.shopify.adapters.HomePageAdapter;
+
 import xyz.waiphyoag.shopify.adapters.ProductInDesignerAdapter;
 import xyz.waiphyoag.shopify.adapters.ProductInTopTrendsAdapter;
 import xyz.waiphyoag.shopify.adapters.PromotionItemViewPager;
 import xyz.waiphyoag.shopify.adapters.RandomItemsAdapter;
+import xyz.waiphyoag.shopify.components.SmartRecyclerView;
 import xyz.waiphyoag.shopify.data.model.ProductModel;
 import xyz.waiphyoag.shopify.data.vo.SharedParent;
 import xyz.waiphyoag.shopify.data.vo.ShopNowVO;
@@ -57,23 +58,23 @@ public class ProductMainActivity extends AppCompatActivity implements ProductMai
     TabLayout tabLayout;
     @BindView(R.id.vp_promotion_item)
     ViewPager vpPromotionItem;
-    @BindView(R.id.rv_HomeScreen)
-    RecyclerView rvHomeScreen;
+
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
     @BindView(R.id.btn_explore)
     Button btnExplore;
+    @BindView(R.id.rv_designer_product)
+    SmartRecyclerView rvDesignerProduct;
+    @BindView(R.id.rv_RandomThings)
+    SmartRecyclerView rvRandomThings;
+    @BindView(R.id.rv_TopTrends)
+    SmartRecyclerView rvTopTrends;
 
 
-    public List<SharedParent> mShopifyList = new ArrayList<>();
-
-    public List<SharedParent> getmShopifyList() {
-        return mShopifyList;
-    }
-
-
-    private HomePageAdapter mHomePageAdapter;
     private PromotionItemViewPager mPromotionItemViewPager;
+    private ProductInDesignerAdapter mDesingerAdapter;
+    private ProductInTopTrendsAdapter mTopTrendsAdapter;
+    private RandomItemsAdapter mRandomAdapter;
 
     public static Intent mainIntent(Context context) {
         Intent intent = new Intent(context, ProductMainActivity.class);
@@ -95,10 +96,21 @@ public class ProductMainActivity extends AppCompatActivity implements ProductMai
         tabLayout.setupWithViewPager(vpPromotionItem, true);
 
 
-        mHomePageAdapter = new HomePageAdapter(this, this);
-        LinearLayoutManager linearLayoutManagerforHomePage = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        rvHomeScreen.setAdapter(mHomePageAdapter);
-        rvHomeScreen.setLayoutManager(linearLayoutManagerforHomePage);
+        mDesingerAdapter = new ProductInDesignerAdapter(this, this);
+        LinearLayoutManager linearLayoutManagerforDesigner = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvDesignerProduct.setAdapter(mDesingerAdapter);
+        rvDesignerProduct.setLayoutManager(linearLayoutManagerforDesigner);
+
+        mTopTrendsAdapter = new ProductInTopTrendsAdapter(this, this);
+        LinearLayoutManager linearLayoutManagerforTopTrends = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvTopTrends.setAdapter(mTopTrendsAdapter);
+        rvTopTrends.setLayoutManager(linearLayoutManagerforTopTrends);
+
+
+        mRandomAdapter = new RandomItemsAdapter(this, this);
+        LinearLayoutManager linearLayoutManagerforRandom = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        rvRandomThings.setAdapter(mRandomAdapter);
+        rvRandomThings.setLayoutManager(linearLayoutManagerforRandom);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -129,7 +141,7 @@ public class ProductMainActivity extends AppCompatActivity implements ProductMai
                         break;
 
                     case R.id.item_cart:
-                        Intent intentforCart = AddToCartActivity.cartIntent(getApplicationContext());
+                        Intent intentforCart = AddToCartActivity.cartIntentForNoItem(getApplicationContext());
                         startActivity(intentforCart);
 
                         break;
@@ -157,8 +169,6 @@ public class ProductMainActivity extends AppCompatActivity implements ProductMai
         ProductModel.getInstance().startLoadingDesignerProduct();
 
 
-
-
         ProductModel.getInstance().startLoadingPromotionProduct();
 
 
@@ -169,9 +179,17 @@ public class ProductMainActivity extends AppCompatActivity implements ProductMai
 
 
     @Override
-    public void onTapItem() {
-        Intent intent = ProductDetailActivity.detailIntent(getApplicationContext());
-        startActivity(intent);
+    public void onTapDesignerItem(String productId) {
+        Intent intentForDetail = ProductDetailActivity.detailIntentForDesigner(getApplicationContext(), productId);
+        startActivity(intentForDetail);
+
+
+    }
+
+    @Override
+    public void onTapTopTrends(String productId) {
+//        Intent intentForDetail = ProductDetailActivity.de(getApplicationContext(), productId);
+//        startActivity(intentForDetail);
 
     }
 
@@ -204,28 +222,31 @@ public class ProductMainActivity extends AppCompatActivity implements ProductMai
     }
 
 
-
     @Subscribe
     public void onLoadDesignerProdut(LoadProductListEvent.LoadDesignerProduct designerProduct) {
-        mShopifyList.addAll(designerProduct.getLoadDeisngerProduct());
+        mDesingerAdapter.setNewData(designerProduct.getLoadDeisngerProduct());
 
     }
 
     @Subscribe
     public void onLoadTopTrends(LoadProductListEvent.loadTopTrendsProduct topTrendsProduct) {
-        mShopifyList.addAll(topTrendsProduct.getLoadTopTrendsList());
-
+        mTopTrendsAdapter.setNewData(topTrendsProduct.getLoadTopTrendsList());
 
 
     }
 
     @Subscribe
     public void onLoadsRandomthings(LoadProductListEvent.loadRandomThingsProduct randomThingsProduct) {
-        mShopifyList.addAll(randomThingsProduct.getLoadRandomThingsList());
-        mHomePageAdapter.setNewData(mShopifyList);
+
+        mRandomAdapter.setNewData(randomThingsProduct.getLoadRandomThingsList());
 
 
+    }
 
+    @Subscribe
+    public void onLoadPromotionThings(LoadProductListEvent.loadPromotionThings promotionThings) {
+
+        mPromotionItemViewPager.setData(promotionThings.getLoadPromotionThings());
     }
 }
 

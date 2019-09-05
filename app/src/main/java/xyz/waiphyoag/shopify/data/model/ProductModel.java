@@ -1,10 +1,17 @@
 package xyz.waiphyoag.shopify.data.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,11 +29,13 @@ import java.util.List;
 import xyz.waiphyoag.shopify.ShopifyApplication;
 import xyz.waiphyoag.shopify.data.vo.DesignerVO;
 import xyz.waiphyoag.shopify.data.vo.PromotionVO;
+import xyz.waiphyoag.shopify.data.vo.PurchaseVO;
 import xyz.waiphyoag.shopify.data.vo.RandomThingsVO;
 import xyz.waiphyoag.shopify.data.vo.SharedParent;
 import xyz.waiphyoag.shopify.data.vo.ShopNowVO;
 import xyz.waiphyoag.shopify.data.vo.ShopifyVO;
 import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
+import xyz.waiphyoag.shopify.data.vo.UserVO;
 import xyz.waiphyoag.shopify.events.LoadProductListEvent;
 import xyz.waiphyoag.shopify.events.LoadShopNowListEvent;
 
@@ -48,10 +57,10 @@ public class ProductModel {
     public ArrayList<RandomThingsVO> randomThingsVOS = new ArrayList<>();
 
     public ArrayList<ShopNowVO> shopNowVOS = new ArrayList<>();
-    public ArrayList<PromotionVO> promotionVOS = new ArrayList<>();
-
-
     public List<ShopNowVO> shopNowVOList = new ArrayList<>();
+
+    public ArrayList<PromotionVO> promotionVOS = new ArrayList<>();
+    public List<PromotionVO> promotionVOList = new ArrayList<>();
 
 
     public List<SharedParent> mCollectionList;
@@ -60,9 +69,13 @@ public class ProductModel {
         return mCollectionList;
     }
 
+    public UserVO userVO;
+
     private static ProductModel mInstance;
     private DatabaseReference mDatabaseReference;
     private FirebaseUser mFirebaseUser;
+
+
     private FirebaseAuth mFirebaseAuth;
 
 
@@ -229,6 +242,12 @@ public class ProductModel {
                         PromotionVO promotionVO = products.getValue(PromotionVO.class);
                         promotionVOS.add(promotionVO);
                     }
+                    promotionVOList.clear();
+                    promotionVOList.addAll(promotionVOS);
+
+                    LoadProductListEvent.loadPromotionThings promotionThings = new LoadProductListEvent.loadPromotionThings(promotionVOList);
+                    EventBus.getDefault().post(promotionThings);
+
 
                 }
             }
@@ -240,7 +259,80 @@ public class ProductModel {
         });
     }
 
+    public ShopNowVO getProductListDetilById(String productId) {
+        if (!shopNowVOList.isEmpty()) {
+            for (ShopNowVO shopNowVO : shopNowVOList) {
+                if (shopNowVO.getProductId().equals(productId)) {
+                    return shopNowVO;
+                }
+            }
+        }
+        return null;
+
+    }
+
+    public DesignerVO getProductListDetilByIdForDesigner(String productId) {
+        if (!designerVOList.isEmpty()) {
+            for (DesignerVO designerVO : designerVOList) {
+                if (designerVO.getProductId().equals(productId)) {
+                    return designerVO;
+                }
+            }
+        }
+        return null;
+
+    }
+
+    public TopTrendsVO getProductListDetilByIdForTopTrends(String productId) {
+        if (!topTrendsVOList.isEmpty()) {
+            for (TopTrendsVO topTrendsVO : topTrendsVOList) {
+                if (topTrendsVO.getProductId().equals(productId)) {
+                    return topTrendsVO;
+                }
+            }
+        }
+        return null;
+
+    }
+
+    public void addNewUser(String userId, String userName, String productId, String email) {
+
+        userVO = new UserVO(userId, userName, productId, email);
+        mDatabaseReference.child(SHOPIFY).child("User").child(userId).setValue(userVO);
+
+    }
+
+    public void purchaseProduct(String userId, String productId, String address) {
+
+        PurchaseVO purchaseVO = new PurchaseVO(userId, productId, address);
+        if (userId != purchaseVO.getUserId()) {
+            mDatabaseReference.child(SHOPIFY).child("Purchase").child(userId).setValue(purchaseVO);
+        } else {
+            mDatabaseReference.child(SHOPIFY).child("Purchase").child(userId).child("Additional Purchase").setValue(purchaseVO);
+        }
+
+    }
 
 
+    public void authenticateUserWithGoogleAccount(final GoogleSignInAccount signInAccount, final SignInWithGoogleAccountDelegate delegate) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
+        mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                delegate.onSuccessSignIn(signInAccount);
+            }
+        });
+    }
 
+    public interface SignInWithGoogleAccountDelegate {
+        void onSuccessSignIn(GoogleSignInAccount signInAccount);
+
+        void onFailureSignIn(String map);
+    }
+
+    public String getUserId() {
+
+        String userId = userVO.getUserId();
+        return userId;
+    }
 }

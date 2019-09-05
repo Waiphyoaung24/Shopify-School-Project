@@ -10,7 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import xyz.waiphyoag.shopify.R;
+import xyz.waiphyoag.shopify.data.vo.PromotionVO;
 import xyz.waiphyoag.shopify.viewholders.ImageViewItem;
 
 /**
@@ -19,9 +23,15 @@ import xyz.waiphyoag.shopify.viewholders.ImageViewItem;
 
 public class PromotionItemViewPager extends PagerAdapter {
 
+    private List<PromotionVO> promotionVOList;
+
+    public PromotionItemViewPager() {
+        promotionVOList = new ArrayList<>();
+    }
+
     @Override
     public int getCount() {
-        return 5;
+        return promotionVOList.size();
     }
 
     @Override
@@ -32,15 +42,21 @@ public class PromotionItemViewPager extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        Context context=container.getContext();
-        LayoutInflater layoutInflater=LayoutInflater.from(context);
-        ImageViewItem view=(ImageViewItem)layoutInflater.inflate(R.layout.item_promotion_item,container,false);
+        Context context = container.getContext();
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        ImageViewItem view = (ImageViewItem) layoutInflater.inflate(R.layout.item_promotion_item, container, false);
         container.addView(view);
+        view.onBindDataItemToPromotion(promotionVOList.get(position));
         return view;
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View)object);
+        container.removeView((View) object);
+    }
+
+    public void setData(List<PromotionVO> promotionVOS) {
+        promotionVOList = promotionVOS;
+        notifyDataSetChanged();
     }
 }

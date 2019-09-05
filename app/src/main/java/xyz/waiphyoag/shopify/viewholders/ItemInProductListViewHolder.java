@@ -28,6 +28,8 @@ public class ItemInProductListViewHolder extends BaseViewHolder<ShopNowVO> {
     @BindView(R.id.tv_product_price)
     TextView tvProductPrice;
 
+    private ShopNowVO shopNowVO;
+
     private ProductListScreenDelegate mDelegate;
 
 
@@ -40,13 +42,14 @@ public class ItemInProductListViewHolder extends BaseViewHolder<ShopNowVO> {
 
     @Override
     public void onClick(View v) {
-        mDelegate.onTapProductListImage();
+        mDelegate.onTapProductListImage(shopNowVO.getProductId());
     }
 
 
     @Override
     public void setData(ShopNowVO data) {
 
+       shopNowVO = data;
         tvProductName.setText(data.getProductTitle());
 
         Glide.with(itemView.getContext())

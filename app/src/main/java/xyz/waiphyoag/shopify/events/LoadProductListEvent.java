@@ -3,6 +3,7 @@ package xyz.waiphyoag.shopify.events;
 import java.util.List;
 
 import xyz.waiphyoag.shopify.data.vo.DesignerVO;
+import xyz.waiphyoag.shopify.data.vo.PromotionVO;
 import xyz.waiphyoag.shopify.data.vo.RandomThingsVO;
 import xyz.waiphyoag.shopify.data.vo.SharedParent;
 import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
@@ -60,6 +61,18 @@ public class LoadProductListEvent {
 
         public List<RandomThingsVO> getLoadRandomThingsList() {
             return loadRandomThingsList;
+        }
+    }
+
+    public static class loadPromotionThings {
+        private List<PromotionVO> loadPromotionThings;
+
+        public loadPromotionThings(List<PromotionVO> loadPromotionThings) {
+            this.loadPromotionThings = loadPromotionThings;
+        }
+
+        public List<PromotionVO> getLoadPromotionThings() {
+            return loadPromotionThings;
         }
     }
 }

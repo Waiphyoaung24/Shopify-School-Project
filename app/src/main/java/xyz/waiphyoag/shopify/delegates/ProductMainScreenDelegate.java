@@ -6,7 +6,8 @@ package xyz.waiphyoag.shopify.delegates;
 
 public interface ProductMainScreenDelegate {
 
-    void onTapItem();
+    void onTapDesignerItem(String productId);
+    void onTapTopTrends(String productId);
     void onTapSeeMore();
     void onTapRandom();
 }
