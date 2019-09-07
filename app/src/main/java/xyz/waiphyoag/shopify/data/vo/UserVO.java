@@ -11,15 +11,14 @@ public class UserVO {
     private String userId;
     @SerializedName("userName")
     private String userName;
-    @SerializedName("productId")
-    private String productId;
+
     @SerializedName("email")
     private String email;
 
-    public UserVO(String userId, String userName, String productId, String email) {
+
+    public UserVO(String userId, String userName, String email) {
         this.userId = userId;
         this.userName = userName;
-        this.productId = productId;
         this.email = email;
     }
 
@@ -35,13 +34,7 @@ public class UserVO {
         return userId;
     }
 
-    public String getProductId() {
-        return productId;
-    }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
 
     public void setUserId(String userId) {
         this.userId = userId;

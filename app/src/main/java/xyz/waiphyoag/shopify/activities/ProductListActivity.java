@@ -33,12 +33,14 @@ import xyz.waiphyoag.shopify.data.model.ProductModel;
 import xyz.waiphyoag.shopify.data.vo.ShopNowVO;
 import xyz.waiphyoag.shopify.delegates.ProductListScreenDelegate;
 import xyz.waiphyoag.shopify.events.LoadShopNowListEvent;
+import xyz.waiphyoag.shopify.fragments.SuccessOrderFragment;
+import xyz.waiphyoag.shopify.fragments.UserProfile;
 
 /**
  * Created by WaiPhyoAg on 8/31/19.
  */
 
-public class ProductListActivity extends AppCompatActivity implements ProductListScreenDelegate {
+public class ProductListActivity extends BaseActivity implements ProductListScreenDelegate {
 
 
     @BindView(R.id.rv_product_list)
@@ -46,6 +48,9 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
+
+    @BindView(R.id.ivProfile)
+    ImageView ivProfile;
 
     @BindView(R.id.iv_shopping_cart)
     ImageView ivAddToCart;
@@ -91,6 +96,8 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
 
                         Intent intentForHome = ProductMainActivity.mainIntent(getApplicationContext());
                         startActivity(intentForHome);
+                        finish();
+
 
                         break;
                     case R.id.item_shop:
@@ -102,6 +109,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
 
                         Intent intentForCart = AddToCartActivity.cartIntentForNoItem(getApplicationContext());
                         startActivity(intentForCart);
+                        finish();
 
                         break;
 
@@ -122,6 +130,22 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         });
 
         ProductModel.getInstance().startLoadingShopNowProduct();
+
+
+
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.pop_enter,R.anim.exit,R.anim.enter, R.anim.pop_exit)
+                        .replace(R.id.rl_top_screen, UserProfile.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+
+
+            }
+        });
 
 
     }

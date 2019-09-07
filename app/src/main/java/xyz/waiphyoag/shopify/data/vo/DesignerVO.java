@@ -17,6 +17,16 @@ public class DesignerVO implements  SharedParent {
     @SerializedName("productId")
     private String productId;
 
+    private Boolean favorite;
+
+    public Boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
+
     public String getProductId() {
         return productId;
     }

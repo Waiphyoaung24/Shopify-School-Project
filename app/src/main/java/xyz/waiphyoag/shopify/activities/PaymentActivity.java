@@ -6,10 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,20 +24,25 @@ import xyz.waiphyoag.shopify.data.model.ProductModel;
 import xyz.waiphyoag.shopify.data.vo.DesignerVO;
 import xyz.waiphyoag.shopify.data.vo.PurchaseVO;
 import xyz.waiphyoag.shopify.data.vo.ShopNowVO;
+import xyz.waiphyoag.shopify.data.vo.TopTrendsVO;
 import xyz.waiphyoag.shopify.data.vo.UserVO;
+import xyz.waiphyoag.shopify.fragments.SuccessOrderFragment;
 
 /**
  * Created by WaiPhyoAg on 9/4/19.
  */
 
-public class PaymentActivity extends AppCompatActivity {
+public class PaymentActivity extends BaseActivity {
 
     @BindView(R.id.tv_product_price)
     TextView tvProductPrice;
     @BindView(R.id.CashOnDelivery)
     LinearLayout linearLayout;
     @BindView(R.id.iv_back)
-    ImageView ivBack;
+    FrameLayout ivBack;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.view)
     View view;
@@ -58,6 +65,13 @@ public class PaymentActivity extends AppCompatActivity {
         Intent intent = new Intent(context, PaymentActivity.class);
         intent.putExtra("productId", productId);
         intent.putExtra("detailType", 1);
+        return intent;
+    }
+
+    public static Intent paymentIntentForTopTrends(Context context, String productId) {
+        Intent intent = new Intent(context, PaymentActivity.class);
+        intent.putExtra("productId", productId);
+        intent.putExtra("detailType", 2);
         return intent;
     }
 
@@ -87,7 +101,7 @@ public class PaymentActivity extends AppCompatActivity {
             getProductPaymentSectionByListScreen(shopNowVO);
 
 
-            onTapBtnPaynow(userName, productId, etAddress.getText().toString());
+            onTapBtnPaynow(userName, productId);
 
 
         } else if (detailType == 1) {
@@ -95,7 +109,15 @@ public class PaymentActivity extends AppCompatActivity {
             DesignerVO designerVO = ProductModel.getInstance().getProductListDetilByIdForDesigner(productId);
             String userName = ProductModel.getInstance().getUserId();
             getProductPaymentSectionByDesignerScreen(designerVO);
-            onTapBtnPaynow(userName, productId, etAddress.getText().toString());
+            onTapBtnPaynow(userName, productId);
+
+
+        } else if (detailType == 2) {
+            String productId = getIntent().getStringExtra("productId");
+            TopTrendsVO topTrendsVO = ProductModel.getInstance().getProductListDetilByIdForTopTrends(productId);
+            String userName = ProductModel.getInstance().getUserId();
+            getProductPaymentSectionByTopTrendsScreen(topTrendsVO);
+            onTapBtnPaynow(userName, productId);
 
 
         }
@@ -123,6 +145,8 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
 
+
+
     }
 
     public void getProductPaymentSectionByListScreen(final ShopNowVO shopNowVO) {
@@ -130,18 +154,18 @@ public class PaymentActivity extends AppCompatActivity {
 
         tvProductPrice.setText(shopNowVO.getProductPrice());
 
-        tvOrderList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    linearLayout.setBackgroundColor(getColor(R.color.secondary_text));
-                }
-                Toast.makeText(getApplicationContext(), "You have now been selceted for cash on delivery", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//        tvOrderList.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    linearLayout.setBackgroundColor(getColor(R.color.secondary_text));
+//                }
+//                Toast.makeText(getApplicationContext(), "You have now been selceted for cash on delivery", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
     }
 
     public void getProductPaymentSectionByDesignerScreen(final DesignerVO designerVO) {
@@ -149,6 +173,25 @@ public class PaymentActivity extends AppCompatActivity {
 
         tvProductPrice.setText(designerVO.getProductPrice());
 
+//        tvOrderList.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    linearLayout.setBackgroundColor(getColor(R.color.secondary_text));
+//                }
+//                Toast.makeText(getApplicationContext(), "You have now been selceted for cash on delivery", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
+
+    }
+    public void getProductPaymentSectionByTopTrendsScreen(final TopTrendsVO topTrendsVO) {
+
+
+        tvProductPrice.setText(topTrendsVO.getProductPrice());
+
         tvOrderList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,17 +207,25 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
-    public void onTapBtnPaynow(final String userName, final String productId, final String address) {
+    public void onTapBtnPaynow(final String userName, final String productId) {
         btnPaynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                Toast.makeText(getApplicationContext(), "Your purchase has now been completed", Toast.LENGTH_SHORT).show();
-                Intent intent = ProductMainActivity.mainIntent(getApplicationContext());
-                startActivity(intent);
+                String address = etAddress.getText().toString();
 
                 ProductModel.getInstance().purchaseProduct(userName, productId, address);
+
+                btnPaynow.setVisibility(View.GONE);
+                ivBack.setVisibility(View.GONE);
+
+
+
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter,R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
+                        .replace(R.id.rl_payment, SuccessOrderFragment.newInstance())
+                        .disallowAddToBackStack()
+                        .commit();
 
             }
         });

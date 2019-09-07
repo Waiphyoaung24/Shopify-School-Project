@@ -3,6 +3,7 @@ package xyz.waiphyoag.shopify.data.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.waiphyoag.shopify.ShopifyApplication;
+import xyz.waiphyoag.shopify.activities.PaymentActivity;
 import xyz.waiphyoag.shopify.data.vo.DesignerVO;
 import xyz.waiphyoag.shopify.data.vo.PromotionVO;
 import xyz.waiphyoag.shopify.data.vo.PurchaseVO;
@@ -295,21 +297,27 @@ public class ProductModel {
 
     }
 
-    public void addNewUser(String userId, String userName, String productId, String email) {
+    public void addNewUser(String userId, String userName, String email) {
 
-        userVO = new UserVO(userId, userName, productId, email);
+        userVO = new UserVO(userId, userName, email);
         mDatabaseReference.child(SHOPIFY).child("User").child(userId).setValue(userVO);
 
     }
 
+
+
+
     public void purchaseProduct(String userId, String productId, String address) {
 
         PurchaseVO purchaseVO = new PurchaseVO(userId, productId, address);
-        if (userId != purchaseVO.getUserId()) {
-            mDatabaseReference.child(SHOPIFY).child("Purchase").child(userId).setValue(purchaseVO);
-        } else {
-            mDatabaseReference.child(SHOPIFY).child("Purchase").child(userId).child("Additional Purchase").setValue(purchaseVO);
-        }
+
+        Long tsLong = System.currentTimeMillis() / 10;
+        String ts = tsLong.toString();
+        String key = productId + "__" + ts;
+
+
+        mDatabaseReference.child(SHOPIFY).child("Purchase").child(userId).child(" Total Purchases").child(key).setValue(purchaseVO);
+
 
     }
 

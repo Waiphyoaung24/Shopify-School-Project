@@ -25,12 +25,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.waiphyoag.shopify.R;
 import xyz.waiphyoag.shopify.data.model.ProductModel;
+import xyz.waiphyoag.shopify.fragments.UserProfile;
 
 /**
  * Created by WaiPhyoAg on 9/4/19.
  */
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
     @BindView(R.id.btn_login)
     Button btnLogIn;
 
@@ -48,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private String email;
     private String userProfile;
     private String id;
+    private String phone;
 
     @Override
 
@@ -68,13 +70,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         mSharedPreferences = getSharedPreferences("MySharedPreference", MODE_PRIVATE);
         id = mSharedPreferences.getString("UserId", "");
-        if (!id.equalsIgnoreCase("")) {
-            name = mSharedPreferences.getString("UserName", "");
-            email = mSharedPreferences.getString("UserEmail", "");
-            userProfile = mSharedPreferences.getString("UserProfile", "");
-        }
+        name = mSharedPreferences.getString("UserName", "");
+        email = mSharedPreferences.getString("UserEmail", "");
+        phone = mSharedPreferences.getString("phone","");
+        userProfile = mSharedPreferences.getString("UserProfile", "");
+
 
         onTapButton(getApplicationContext());
+
         setupGoogleApiClient();
 
     }
@@ -124,14 +127,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         + account.getDisplayName(), Toast.LENGTH_SHORT).show();
 
 
-                mSharedPreferences.edit()
-                        .putString("UserId", account.getId())
-                        .putString("UserEmail", account.getEmail())
-                        .putString("UserName", account.getDisplayName())
-                        .putString("UserProfile", String.valueOf(account.getPhotoUrl()))
-                        .apply();
 
-                ProductModel.getInstance().addNewUser(id, name, "", email);
+
+//                ProductModel.getInstance().addNewUser(id, name, "", email);
 
 
                 Intent intent = ProductMainActivity.mainIntent(getApplicationContext());
@@ -155,7 +153,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     mAuth = FirebaseAuth.getInstance();
                     mFirebaseUser = mAuth.getCurrentUser();
 
-                    ProductModel.getInstance().addNewUser(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName(), "", mFirebaseUser.getEmail());
+
+                    ProductModel.getInstance().addNewUser(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName(), mFirebaseUser.getEmail());
+
+
+                    mSharedPreferences.edit()
+                            .putString("UserId", mFirebaseUser.getUid())
+                            .putString("UserEmail", mFirebaseUser.getEmail())
+                            .putString("UserName", mFirebaseUser.getDisplayName())
+                            .putString("UserProfile", mFirebaseUser.getPhotoUrl().toString())
+                            .putString("phone",mFirebaseUser.getPhoneNumber())
+                            .apply();
+
                 }
 
                 @Override
